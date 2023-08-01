@@ -15,6 +15,32 @@
 # AWS User-specific
 .idea/**/aws.xml
 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
 # Generated files
 .idea/**/contentModel.xml
 
@@ -91,7 +117,6 @@ fabric.properties
 
 ### macOS ###
 # General
-.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -124,12 +149,9 @@ Temporary Items
 
 ### react ###
 .DS_*
-*.log
-logs
 **/*.backup.*
 **/*.back.*
 
-node_modules
 bower_components
 
 *.sublime*
@@ -139,11 +161,9 @@ thumb
 sketch
 
 ### VisualStudioCode ###
-.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
 !.vscode/*.code-snippets
 
 # Local History for Visual Studio Code
@@ -172,12 +192,7 @@ sketch
 /build
 
 # misc
-.DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
