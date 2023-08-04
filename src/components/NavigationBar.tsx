@@ -1,32 +1,22 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
+import {styled, useTheme, Theme, CSSObject} from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Drawer from '@mui/material/Drawer';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
 import List from '@mui/material/List';
+import CssBaseline from '@mui/material/CssBaseline';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import PermIdentityRoundedIcon from '@mui/icons-material/PermIdentityRounded';
-import Toolbar from '@mui/material/Toolbar';
 import logo from '../assets/Kingstagram.svg';
-// import logoK from '../assets/K.svg'; // 축소된 로고
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-
-
-const drawerWidth = 240;
-
-interface Props {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    window?: () => Window;
-}
+import logoK from '../assets/K.svg';
 
 
 const achromaticTheme = createTheme({
@@ -49,92 +39,122 @@ const achromaticTheme = createTheme({
     },
 });
 
-export default function NavigationBar(props: Props) {
-    const {window} = props;
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-    const drawerIcons = [<HomeOutlinedIcon/>, <SearchRoundedIcon/>, <AddCircleOutlineRoundedIcon/>,
-        <PermIdentityRoundedIcon/>];
+const drawerWidth = 240;
+
+const openedMixin = (theme: Theme): CSSObject => ({
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: 'hidden',
+});
+
+const closedMixin = (theme: Theme): CSSObject => ({
+    transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+});
+
+const DrawerHeader = styled('div')(({theme}) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+}));
+
+interface AppBarProps extends MuiAppBarProps {
+    open?: boolean;
+}
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({theme, open}) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        marginLeft: drawerWidth,
+        width: `calc(100% - ${drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})(
+    ({theme, open}) => ({
+        width: drawerWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+        boxSizing: 'border-box',
+        ...(open && {
+            ...openedMixin(theme),
+            '& .MuiDrawer-paper': openedMixin(theme),
+        }),
+        ...(!open && {
+            ...closedMixin(theme),
+            '& .MuiDrawer-paper': closedMixin(theme),
+        }),
+    }),
+);
+
+export default function MiniDrawer() {
+    const theme = useTheme();
+    const isMatch = useMediaQuery(theme.breakpoints.up('sm'));
+    const [open, setOpen] = React.useState(isMatch);
+    const drawerIcons = [<HomeOutlinedIcon/>, <SearchRoundedIcon/>, <AddCircleOutlineRoundedIcon/>, <PermIdentityRoundedIcon/>];
 
 
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
-    const drawer = (
-        <div>
-            <Toolbar>
-                <img src={logo} alt="logo" style={{height: '2em'}}/>
-            </Toolbar>
-            <List>
-                {['홈', '검색', '만들기', '프로필'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {drawerIcons[index]}
-                            </ListItemIcon>
-                            <ListItemText primary={text} sx={{ display: { xs: 'none', sm: 'block' } }}/>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </div>
-    );
-
-    const container = window !== undefined ? () => window().document.body : undefined;
+    // Update the state when isMatch changes
+    React.useEffect(() => {
+        setOpen(isMatch);
+    }, [isMatch]);
 
     return (
-        <ThemeProvider theme={achromaticTheme}> {
+        <ThemeProvider theme={achromaticTheme}>
             <Box sx={{display: 'flex'}}>
                 <CssBaseline/>
-                <AppBar
-                    position="fixed"
-                    sx={{
-                        width: {sm: `calc(100% - ${drawerWidth}px)`},
-                        ml: {sm: `${drawerWidth}px`},
-                    }}
-                >
+                <AppBar position="fixed" open={open}>
+
                 </AppBar>
-                <Box
-                    component="nav"
-                    sx={{width: {sm: drawerWidth}, flexShrink: {sm: 0}}}
-                    aria-label="navigation folders"
-                >
-                    {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-                    <Drawer
-                        container={container}
-                        variant="temporary"
-                        open={mobileOpen}
-                        onClose={handleDrawerToggle}
-                        ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
-                        }}
-                        sx={{
-                            display: {xs: 'block', sm: 'none'},
-                            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
-                        }}
-                    >
-                        {drawer}
-                    </Drawer>
-                    <Drawer
-                        variant="permanent"
-                        sx={{
-                            display: {xs: 'none', sm: 'block'},
-                            '& .MuiDrawer-paper': {boxSizing: 'border-box', width: drawerWidth},
-                        }}
-                        open
-                    >
-                        {drawer}
-                    </Drawer>
-                </Box>
-                <Box
-                    component="main"
-                    sx={{flexGrow: 1, p: 3, width: {sm: `calc(100% - ${drawerWidth}px)`}}}
-                >
-                    <Toolbar/>
+                <Drawer variant="permanent" open={open}>
+                    <List>
+                        <Box
+                            component="img"
+                            src={open ? logo : logoK}
+                            alt="logo"
+                            sx={{ height: '2em', mt: '1em', mb: '1em' }}
+                        />
+                        {['홈', '검색', '만들기', '프로필'].map((text, index) => (
+                            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        {drawerIcons[index]}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Drawer>
+
+                <Box component="main" sx={{flexGrow: 1, p: 3}}>
+                    <DrawerHeader/>
+
                 </Box>
             </Box>
-        }
         </ThemeProvider>
-
     );
 }
