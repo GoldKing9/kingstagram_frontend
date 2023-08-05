@@ -41,22 +41,24 @@ const achromaticTheme = createTheme({
 
 const drawerWidth = 240;
 
-const openedMixin = (theme: Theme): CSSObject => ({
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowX: 'hidden',
+// 네비게이션 바가 열릴 때 적용되는 스타일을 정의
+const openedMixin = (theme: Theme): CSSObject => ({             // (타입): 리턴값
+    width: drawerWidth, // 240
+    transition: theme.transitions.create('width', { // width 에 transition 을 적용할 건데,
+        easing: theme.transitions.easing.sharp,                  // 빠른 속도로 시작해서 느리게 끝나는 전환 효과(sharp)
+        duration: theme.transitions.duration.enteringScreen,     // 너비(width)가 얼마나 빠르게 늘어나야 하는지?(enteringScreen)
+    }), // 숫자 대신(n 밀리초 등) 사용하는 이 값(enteringScreen 등)들은 일관된 사용자 경험을 위해 필요!
+    overflowX: 'hidden', // 사이드바 영역을 벗어나는 경우 방지, ex)로고가 K 에서 Kingstagram 으로 바뀌는 순간
 });
 
-const closedMixin = (theme: Theme): CSSObject => ({
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: `calc(${theme.spacing(7)} + 1px)`,
+// 네비게이션 바가 닫힐 때 적용되는 스타일을 정의
+const closedMixin = (theme: Theme): CSSObject => ({              // (타입): 리턴값
+    transition: theme.transitions.create('width', { // width 에 transition 을 적용할 건데,
+        easing: theme.transitions.easing.sharp,                  // 빠른 속도로 시작해서 느리게 끝나는 전환 효과(sharp)
+        duration: theme.transitions.duration.leavingScreen,      // 너비(width)가 얼마나 빠르게 줄어들어야 하는지?(leavingScreen)
+    }),  // 숫자 대신(n 밀리초 등) 사용하는 이 값(enteringScreen 등)들은 일관된 사용자 경험을 위해 필요!
+    overflowX: 'hidden',   // 사이드바 영역을 벗어나는 경우 방지, ex)로고가 Kingstagram 에서 K 로 바뀌는 순간
+    width: `calc(${theme.spacing(7)} + 1px)`, // theme.spacing(1)은 8px, 56+1=57px !
     [theme.breakpoints.up('sm')]: {
         width: `calc(${theme.spacing(8)} + 1px)`,
     },
