@@ -17,7 +17,6 @@ import PermIdentityRoundedIcon from '@mui/icons-material/PermIdentityRounded';
 import logo from '../assets/Kingstagram.svg';
 import logoK from '../assets/K.svg';
 
-
 const achromaticTheme = createTheme({
     palette: {
         primary: {
@@ -61,7 +60,7 @@ const closedMixin = (theme: Theme): CSSObject => ({              // (타입): �
 }); // 57px 이라고 안 쓰고 굳이 단위를 붙여 계산하는 이유는? 개발자가 직접 계산한 값을 추가하는 것보다 직관적이기 때문!
     // 1px 을 더한 이유는? 브라우저는 CSS 계산을 할 때 소수점을 반올림, 정밀한 레이아웃 조절이 필요할 경우 1px을 추가 (큰 차이는 없음)
 
-const Drawer = styled(MuiDrawer)(({ theme, open }) => ({ // MuiDrawer 라는 기존 컴포넌트에 스타일링을 추가 -> 새로운 Drawer 컴포넌트
+const Drawer = styled(MuiDrawer)(({theme, open}) => ({ // MuiDrawer 라는 기존 컴포넌트에 스타일링을 추가 -> 새로운 Drawer 컴포넌트
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
@@ -82,13 +81,12 @@ const Drawer = styled(MuiDrawer)(({ theme, open }) => ({ // MuiDrawer 라는 기
     //     }
 }));
 
-
 export default function NavigationBar() {
     const theme = useTheme();
     const isMatch = useMediaQuery(theme.breakpoints.up('md'));
     const [open, setOpen] = React.useState(isMatch); // 상태의 변화에 따라 UI를 업데이트, 렌더링 필요
-    const drawerIcons = [<HomeOutlinedIcon/>, <SearchRoundedIcon/>, <AddCircleOutlineRoundedIcon/>, <PermIdentityRoundedIcon/>];
-
+    const drawerIcons = [<HomeOutlinedIcon/>, <SearchRoundedIcon/>, <AddCircleOutlineRoundedIcon/>,
+        <PermIdentityRoundedIcon/>];
 
     React.useEffect(() => {
         setOpen(isMatch);
@@ -97,22 +95,22 @@ export default function NavigationBar() {
     return (
         <ThemeProvider theme={achromaticTheme}>
             <Box sx={{display: 'flex'}}>
-                <CssBaseline/>  {/* 브라우저 간 일관된 스타일링을 보장, MUI에서 제공 */}
+                <CssBaseline/> {/* 브라우저 간 일관된 스타일링을 보장, MUI에서 제공 */}
                 <Drawer variant="permanent" open={open}>
                     <List>
                         <Box
                             component="img"
                             src={open ? logo : logoK}
                             alt="logo"
-                            sx={{ height: '2em', mt: '1em', mb: '1em' }}
+                            sx={{height: '2em', mt: '1em', mb: '1em'}}
                         />
                         {['홈', '검색', '만들기', '프로필'].map((text, index) => (
-                            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                            <ListItem key={text} disablePadding sx={{display: 'block'}}>
                                 <ListItemButton>
                                     <ListItemIcon>
                                         {drawerIcons[index]}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                                    <ListItemText primary={text} sx={{opacity: open ? 1 : 0}}/>
                                 </ListItemButton>
                             </ListItem>
                         ))}
