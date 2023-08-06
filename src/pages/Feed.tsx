@@ -1,13 +1,19 @@
-import NavigationBar from "../components/NavigationBar.tsx"
+import NavigationBar from "../components/NavigationBar";
+import InfiniteScrollComponent from "../components/InfiniteScroll";
+import { styled } from '@mui/system';
 
-
+const Container = styled('div')({
+    display: 'flex',
+    height: '100vh'
+});
 
 const Feed = () => {
     return (
-        <>
-            <NavigationBar></NavigationBar>
-        <h1>Feed Page</h1>
-    </>);
+        <Container>
+            <NavigationBar />
+            <InfiniteScrollComponent />
+        </Container>
+    );
 };
 
 export default Feed;
