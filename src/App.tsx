@@ -9,6 +9,7 @@ function App() {
     return (
         <Router>
                 <Routes>
+                    {/*<Route path="/" element={<SampleParents />} /> */}
                     <Route path="/feed" element={<Feed />} />
                 </Routes>
         </Router>
