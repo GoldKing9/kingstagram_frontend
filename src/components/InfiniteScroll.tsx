@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import {Card, CardContent, Typography} from '@mui/material';
-import {Box} from '@mui/material';
-
+import { Card, CardContent, Typography, IconButton, Avatar } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import Box from "@mui/material/Box";
 
 type PostType = {
     postId: number;
@@ -21,6 +22,31 @@ const fetchPosts = async (start: number, limit: number): Promise<PostType[]> => 
     return data.posts;
 };
 
+const timeSince = (date: string) => {
+    const seconds = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
+    let interval = seconds / 31536000;
+
+    if (interval > 1) {
+        return Math.floor(interval) + "년 전";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + "개월 전";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + "일 전";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + "시간 전";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + "분 전";
+    }
+    return Math.floor(seconds) + "초 전";
+};
 
 const InfiniteScrollComponent: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -52,30 +78,51 @@ const InfiniteScrollComponent: React.FC = () => {
             loader={<h4>Loading...</h4>}
         >
             {posts.map(post => (
-                <Card key={post.postId} variant="outlined" style={{margin: '10px 0'}}>
+                <Card key={post.postId} variant="outlined" style={{ margin: '10px 0' }}>
                     <CardContent>
-                        <Typography variant="h6" component="div">
-                            User ID: {post.userId}
-                        </Typography>
-                        <Box
-                            component="img"
-                            src={post.imageUrl.split('|')[0]} // 이미지 URL들 중 첫 번째 이미지만 보여줌. 여러 이미지를 보여주려면 추가 로직 필요
+                        <Box display="flex" alignItems="center" justifyContent="flex-start">
+                            <Avatar /> {/* 임의의 프로필 아이콘 */}
+                            <Box ml={2} textAlign="left">
+                                <Typography variant="h6" component="div">
+                                    {post.userNickname}
+                                </Typography>
+                                <Typography variant="caption">
+                                    {timeSince(post.postTime)}
+                                </Typography>
+                            </Box>
+                        </Box>
+                        {/* Image */}
+                        <img
+                            src={post.imageUrl.split('|')[0]}
                             alt="Post content"
-                            sx={{
-                                width: '100%',
-                                height: 'auto',
-                                marginBottom: '10px'
-                            }}
+                            style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
                         />
-                        <Typography variant="h5" component="div">
+
+                        {/* Action Bar */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                            <div>
+                                <IconButton>
+                                    <FavoriteIcon />
+                                </IconButton>
+                                <IconButton>
+                                    <CommentIcon />
+                                </IconButton>
+                            </div>
+                            <Typography variant="subtitle1">
+                                {post.likeCount} 명이 좋아합니다.
+                            </Typography>
+                        </div>
+
+                        {/* Caption */}
+                        <Typography variant="body1" style={{ marginBottom: '10px' }}>
                             {post.postContent}
                         </Typography>
-                        <Typography variant="subtitle1">
-                            {post.likeCount} 명이 좋아합니다.
-                        </Typography>
+
+                        {/* Timestamp */}
                         <Typography variant="caption">
                             Posted on: {new Date(post.postTime).toLocaleString()}
                         </Typography>
+
                     </CardContent>
                 </Card>
             ))}
