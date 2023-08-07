@@ -2,13 +2,25 @@ import React, {useState, useEffect} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {Card, CardContent, Typography} from '@mui/material';
 import {Box} from '@mui/material';
-import {mockData, PostType} from '../data/mockData';
 
+
+type PostType = {
+    postId: number;
+    postContent: string;
+    imageUrl: string;
+    postTime: string;
+    userId: number;
+    userNickname: string;
+    commentCount: number;
+    likeCount: number;
+};
 
 const fetchPosts = async (start: number, limit: number): Promise<PostType[]> => {
-    // 실제 API 요청 대신 mockData로부터 데이터 가져오기
-    return mockData.slice(start, start + limit);
+    const response = await fetch(`https://7bf12a9e-15cb-437b-8d17-3f531c13498a.mock.pstmn.io/api/feeds?_start=${start}&_limit=${limit}`);
+    const data = await response.json();
+    return data.posts;
 };
+
 
 const InfiniteScrollComponent: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -47,7 +59,7 @@ const InfiniteScrollComponent: React.FC = () => {
                         </Typography>
                         <Box
                             component="img"
-                            src={post.imageUrl}
+                            src={post.imageUrl.split('|')[0]} // 이미지 URL들 중 첫 번째 이미지만 보여줌. 여러 이미지를 보여주려면 추가 로직 필요
                             alt="Post content"
                             sx={{
                                 width: '100%',
@@ -56,30 +68,19 @@ const InfiniteScrollComponent: React.FC = () => {
                             }}
                         />
                         <Typography variant="h5" component="div">
-                            {post.content}
+                            {post.postContent}
                         </Typography>
                         <Typography variant="subtitle1">
-                            {post.likedBy.join(', ')} 총 {post.likesCount} 명이 좋아합니다.
-                        </Typography>
-                        <Typography variant="body1">
-                            Comments:
-                            {post.comments.map(comment => (
-                                <div key={comment.commentId}>
-                                    <Typography variant="body2">
-                                        {comment.userId}: {comment.content}
-                                    </Typography>
-                                </div>
-                            ))}
+                            {post.likeCount} 명이 좋아합니다.
                         </Typography>
                         <Typography variant="caption">
-                            Posted on: {new Date(post.timestamp).toLocaleString()}
+                            Posted on: {new Date(post.postTime).toLocaleString()}
                         </Typography>
                     </CardContent>
                 </Card>
             ))}
         </InfiniteScroll>
     );
-
 };
 
 export default InfiniteScrollComponent;
