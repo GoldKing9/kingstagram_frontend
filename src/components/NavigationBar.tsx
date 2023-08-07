@@ -61,7 +61,7 @@ const closedMixin = (theme: Theme): CSSObject => ({              // (타입): �
     // 1px 을 더한 이유는? 브라우저는 CSS 계산을 할 때 소수점을 반올림, 정밀한 레이아웃 조절이 필요할 경우 1px을 추가 (큰 차이는 없음)
 
 const Drawer = styled(MuiDrawer)(({theme, open}) => ({ // MuiDrawer 라는 기존 컴포넌트에 스타일링을 추가 -> 새로운 Drawer 컴포넌트
-    width: drawerWidth,
+    width: open ? drawerWidth : `calc(${theme.spacing(7)} + 1px)`, // 여기에 조건을 추가합니다.
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
