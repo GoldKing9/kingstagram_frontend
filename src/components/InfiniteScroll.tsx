@@ -17,7 +17,7 @@ type PostType = {
 };
 
 const fetchPosts = async (start: number, limit: number): Promise<PostType[]> => {
-    const response = await fetch(`https://7bf12a9e-15cb-437b-8d17-3f531c13498a.mock.pstmn.io/api/feeds?_start=${start}&_limit=${limit}`);
+    const response = await fetch(`//7bf12a9e-15cb-437b-8d17-3f531c13498a.mock.pstmn.io/api/feeds?_start=${start}&_limit=${limit}`);
     const data = await response.json();
     return data.posts;
 };

@@ -10,7 +10,7 @@ function App() {
         <Router>
                 <Routes>
                     {/*<Route path="/" element={<SampleParents />} /> */}
-                    <Route path="/feed" element={<Feed />} />
+                    <Route path="/" element={<Feed />} />
                 </Routes>
         </Router>
     )
