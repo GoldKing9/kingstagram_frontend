@@ -5,7 +5,7 @@
 </br>
 
 <p align="center">
-<img src="https://github.com/GoldKing9/kingstagram_frontend/assets/47032054/ed8a158a-d783-420e-9184-3cd45a990f23" alt="Tech Stack"/>
+<img src="https://github.com/GoldKing9/kingstagram_frontend/assets/47032054/6e9f0788-117e-454e-a8d4-f33309d28c45" alt="Tech Stack"/>
 </p>
 
 ## 프로젝트 진행 상황
