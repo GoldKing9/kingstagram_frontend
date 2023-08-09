@@ -1,7 +1,7 @@
 // import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import kingstagramLogo from '../assets/Kingstagram.svg';
+import kingstagramLogo from '../assets/Kingstagram.png';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Container from '@mui/system/Container';

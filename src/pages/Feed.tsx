@@ -1,6 +1,4 @@
-import NavigationBar from "../components/NavigationBar.tsx"
-
-
+import NavigationBar from "../components/NavigationBar"
 
 const Feed = () => {
     return (

@@ -14,8 +14,8 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import PermIdentityRoundedIcon from '@mui/icons-material/PermIdentityRounded';
-import logo from '../assets/Kingstagram.svg';
-import logoK from '../assets/K.svg';
+import logo from '../assets/Kingstagram.png';
+import logoK from '../assets/K.png';
 
 const achromaticTheme = createTheme({
     palette: {

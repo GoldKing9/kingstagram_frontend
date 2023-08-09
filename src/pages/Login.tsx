@@ -1,9 +1,9 @@
 // import React from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import kingstagramLogo from '../assets/Kingstagram.svg';
+import kingstagramLogo from '../assets/Kingstagram.png';
 import Box from '@mui/material/Box';
-import kingstagramPhoto from '../assets/Kingstagrm2.png';
+import kingstagramPhoto from '../assets/King.png';
 import Link from '@mui/material/Link';
 import  Grid  from '@mui/material/Grid';
 import Container from '@mui/system/Container';
