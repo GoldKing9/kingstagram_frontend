@@ -1,9 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Card, CardContent, Typography, IconButton, Avatar } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import CommentIcon from '@mui/icons-material/Comment';
+import {Card, CardContent, Typography, IconButton, Avatar} from '@mui/material';
+import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import MapsUgcRoundedIcon from '@mui/icons-material/MapsUgcRounded';
 import Box from "@mui/material/Box";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+
+const achromaticTheme = createTheme({
+    palette: {
+        primary: {
+            main: '#ffffff',
+        },
+        text: {
+            primary: '#000000',
+        },
+    },
+    components: {
+        MuiSvgIcon: {
+            styleOverrides: {
+                root: {
+                    color: '#000000',
+                },
+            },
+        },
+        MuiIconButton: {
+            styleOverrides: {
+                root: {
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                    },
+                    '&:focus': {
+                        outline: 'none',
+                    },
+                },
+            },
+        },
+    },
+});
+
 
 type PostType = {
     postId: number;
@@ -70,63 +105,102 @@ const InfiniteScrollComponent: React.FC = () => {
         setPosts(prevPosts => [...prevPosts, ...newPosts]);
     };
 
+    const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
+
+    const toggleLike = (postId: number) => {
+        setLikedPosts(prev => {
+            const newLiked = new Set(prev);
+            if (newLiked.has(postId)) {
+                newLiked.delete(postId);
+            } else {
+                newLiked.add(postId);
+            }
+            return newLiked;
+        });
+    };
+
+
     return (
-        <InfiniteScroll
-            dataLength={posts.length}
-            next={fetchMoreData}
-            hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
-        >
-            {posts.map(post => (
-                <Card key={post.postId} variant="outlined" style={{ margin: '10px 0' }}>
-                    <CardContent>
-                        <Box display="flex" alignItems="center" justifyContent="flex-start">
-                            <Avatar /> {/* 임의의 프로필 아이콘 */}
-                            <Box ml={2} textAlign="left">
-                                <Typography variant="h6" component="div">
-                                    {post.userNickname}
-                                </Typography>
-                                <Typography variant="caption">
-                                    {timeSince(post.postTime)}
+        <ThemeProvider theme={achromaticTheme}>
+            <InfiniteScroll
+                dataLength={posts.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<h4>Loading...</h4>}
+            >
+                {posts.map(post => (
+                    <Card key={post.postId}
+                          variant="outlined"
+                          sx={{
+                              margin: '10px 0',
+                              width: '80%',
+                              border: 'none',
+                              borderBottom: '1px solid #DBDBDB',
+                          }}>
+                        <CardContent>
+                            <Box display="flex" alignItems="center" justifyContent="flex-start" mb={2}>
+                                <Avatar/> {/* 임의의 프로필 아이콘 */}
+                                <Box ml={2} textAlign="left">
+                                    <Typography variant="h6" component="div">
+                                        {post.userNickname}
+                                    </Typography>
+                                    <Typography variant="caption">
+                                        {timeSince(post.postTime)}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            {/* Image */}
+                            <Box
+                                component="img"
+                                src={post.imageUrl.split('|')[0]}
+                                alt="Post content"
+                                sx={{
+                                    width: "100%",
+                                    height: "300px",
+                                }}/>
+                            {/* Action Bar */}
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'flex-start',
+                                marginBottom: '10px'
+                            }}>
+                                <Box display="flex">
+                                    <IconButton
+                                        sx={{fontSize: 'inherit'}}
+                                        disableRipple
+                                        onClick={() => toggleLike(post.postId)}
+                                    >
+                                        {likedPosts.has(post.postId)
+                                            ? <FavoriteRoundedIcon sx={{color: '#ff2f40'}}/>
+                                            : <FavoriteBorderRoundedIcon sx={{'&:hover': {color: '#737373'}}}/>
+                                        }
+                                    </IconButton>
+
+                                    <IconButton
+                                        sx={{fontSize: 'inherit'}}
+                                        disableRipple
+                                    >
+                                        <MapsUgcRoundedIcon sx={{'&:hover': {color: '#737373'}}}/>
+                                    </IconButton>
+                                </Box>
+                                <Typography variant="subtitle1">
+                                    좋아요 {post.likeCount}개
                                 </Typography>
                             </Box>
-                        </Box>
-                        {/* Image */}
-                        <img
-                            src={post.imageUrl.split('|')[0]}
-                            alt="Post content"
-                            style={{ width: '100%', height: 'auto', marginBottom: '10px' }}
-                        />
-
-                        {/* Action Bar */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                            <div>
-                                <IconButton>
-                                    <FavoriteIcon />
-                                </IconButton>
-                                <IconButton>
-                                    <CommentIcon />
-                                </IconButton>
-                            </div>
-                            <Typography variant="subtitle1">
-                                {post.likeCount} 명이 좋아합니다.
-                            </Typography>
-                        </div>
-
-                        {/* Caption */}
-                        <Typography variant="body1" style={{ marginBottom: '10px' }}>
-                            {post.postContent}
-                        </Typography>
-
-                        {/* Timestamp */}
-                        <Typography variant="caption">
-                            Posted on: {new Date(post.postTime).toLocaleString()}
-                        </Typography>
-
-                    </CardContent>
-                </Card>
-            ))}
-        </InfiniteScroll>
+                            <Box sx={{display: 'flex', marginBottom: '10px'}}>
+                                <Typography variant="body1" component="div" sx={{fontWeight: 'bold'}}>
+                                    {post.userNickname}
+                                </Typography>
+                                <Typography variant="body1" sx={{marginLeft: '10px'}}>
+                                    {post.postContent}
+                                </Typography>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                ))}
+            </InfiniteScroll>
+        </ThemeProvider>
     );
 };
 
