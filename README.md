@@ -26,6 +26,6 @@
 `npm init vite`  
 `npm install`  
 `npm install --save redux react-redux @types/react-redux`  
-`npm install antd --save`  
+`npm install @mui/material/[필요한 컴포넌트]`  
 `npm install react-router-dom`  
 `npm install @types/react-router-dom`  
