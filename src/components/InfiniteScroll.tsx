@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
+import PostDetailModal from './PostDetailModal';
+import HeartIcon from './HeartIcon';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {Card, CardContent, Typography, IconButton, Avatar} from '@mui/material';
-import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import MapsUgcRoundedIcon from '@mui/icons-material/MapsUgcRounded';
 import Box from "@mui/material/Box";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
@@ -39,8 +39,7 @@ const achromaticTheme = createTheme({
     },
 });
 
-
-type PostType = {
+export type PostType = {
     postId: number;
     postContent: string;
     imageUrl: string;
@@ -86,6 +85,7 @@ const timeSince = (date: string) => {
 const InfiniteScrollComponent: React.FC = () => {
     const [posts, setPosts] = useState<PostType[]>([]);
     const [hasMore, setHasMore] = useState(true);
+    const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
 
     useEffect(() => {
         const loadInitialData = async () => {
@@ -119,6 +119,13 @@ const InfiniteScrollComponent: React.FC = () => {
         });
     };
 
+    const handlePostClick = (post: PostType) => {
+        setSelectedPost(post);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedPost(null);
+    };
 
     return (
         <ThemeProvider theme={achromaticTheme}>
@@ -166,20 +173,14 @@ const InfiniteScrollComponent: React.FC = () => {
                                 marginBottom: '10px'
                             }}>
                                 <Box display="flex">
+                                    <HeartIcon
+                                        isLiked={likedPosts.has(post.postId)}
+                                        onToggleLike={() => toggleLike(post.postId)}
+                                    />
                                     <IconButton
-                                        sx={{fontSize: 'inherit'}}
+                                        size={'large'}
                                         disableRipple
-                                        onClick={() => toggleLike(post.postId)}
-                                    >
-                                        {likedPosts.has(post.postId)
-                                            ? <FavoriteRoundedIcon sx={{color: '#ff2f40'}}/>
-                                            : <FavoriteBorderRoundedIcon sx={{'&:hover': {color: '#737373'}}}/>
-                                        }
-                                    </IconButton>
-
-                                    <IconButton
-                                        sx={{fontSize: 'inherit'}}
-                                        disableRipple
+                                        onClick={() => handlePostClick(post)}
                                     >
                                         <MapsUgcRoundedIcon sx={{'&:hover': {color: '#737373'}}}/>
                                     </IconButton>
@@ -199,6 +200,13 @@ const InfiniteScrollComponent: React.FC = () => {
                         </CardContent>
                     </Card>
                 ))}
+                <PostDetailModal
+                    post={selectedPost!}
+                    open={!!selectedPost}
+                    onClose={handleCloseModal}
+                    toggleLike={toggleLike}
+                    isLiked={(postId) => likedPosts.has(postId)}
+                />
             </InfiniteScroll>
         </ThemeProvider>
     );
