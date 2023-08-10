@@ -1,4 +1,5 @@
 import * as React from 'react';
+import UploadModal from './UploadModal';
 import {styled, useTheme, Theme, CSSObject} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
@@ -85,8 +86,34 @@ export default function NavigationBar() {
     const theme = useTheme();
     const isMatch = useMediaQuery(theme.breakpoints.up('md'));
     const [open, setOpen] = React.useState(isMatch); // 상태의 변화에 따라 UI를 업데이트, 렌더링 필요
-    const drawerIcons = [<HomeOutlinedIcon/>, <SearchRoundedIcon/>, <AddCircleOutlineRoundedIcon/>,
-        <PermIdentityRoundedIcon/>];
+    const [isModalOpen, setModalOpen] = React.useState(false); // 모달을 관리하는 상태 추가
+
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+    const handleHomeClick = () => {
+        console.log("Home clicked!");
+    };
+
+    const handleSearchClick = () => {
+        console.log("Search clicked!");
+    };
+
+    const handleProfileClick = () => {
+        console.log("Profile clicked!");
+    };
+
+    const menuItems = [
+        { text: "홈", icon: <HomeOutlinedIcon />, onClick: handleHomeClick },
+        { text: "검색", icon: <SearchRoundedIcon />, onClick: handleSearchClick },
+        { text: "만들기", icon: <AddCircleOutlineRoundedIcon />, onClick: handleOpenModal },
+        { text: "프로필", icon: <PermIdentityRoundedIcon />, onClick: handleProfileClick },
+    ];
 
     React.useEffect(() => {
         setOpen(isMatch);
@@ -104,18 +131,19 @@ export default function NavigationBar() {
                             alt="logo"
                             sx={{height: '2em', mt: '1em', mb: '1em'}}
                         />
-                        {['홈', '검색', '만들기', '프로필'].map((text, index) => (
-                            <ListItem key={text} disablePadding sx={{display: 'block'}}>
-                                <ListItemButton>
+                        {menuItems.map((item) => (
+                            <ListItem key={item.text} disablePadding sx={{display: 'block'}}>
+                                <ListItemButton onClick={item.onClick}>
                                     <ListItemIcon>
-                                        {drawerIcons[index]}
+                                        {item.icon}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} sx={{opacity: open ? 1 : 0}}/>
+                                    <ListItemText primary={item.text} sx={{opacity: open ? 1 : 0}}/>
                                 </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
                 </Drawer>
+                <UploadModal open={isModalOpen} onClose={handleCloseModal} /> {/* 모달 컴포넌트 추가 */}
             </Box>
         </ThemeProvider>
     );
