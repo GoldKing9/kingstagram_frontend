@@ -36,6 +36,9 @@ const UploadModal: React.FC<UploadModalProps> = ({open, onClose}) => {
 
         const handleUpload = () => {
             console.log("Uploaded:", {image, description});
+
+            setImage(null);
+            setDescription("");
             onClose();
         };
 
@@ -125,8 +128,14 @@ const UploadModal: React.FC<UploadModalProps> = ({open, onClose}) => {
                                 )
                             }
                         </Grid>
-                        <Grid item xs={6} sx={{ height: '95%', display: 'flex', flexDirection: 'column' }}>
-                            <Box sx={{ flexGrow: 1, height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                        <Grid item xs={6} sx={{height: '95%', display: 'flex', flexDirection: 'column'}}>
+                            <Box sx={{
+                                flexGrow: 1,
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                overflow: 'hidden'
+                            }}>
                                 <TextField
                                     fullWidth
                                     placeholder="문구 입력..."
@@ -134,10 +143,10 @@ const UploadModal: React.FC<UploadModalProps> = ({open, onClose}) => {
                                     value={description}
                                     onChange={handleDescriptionChange}
                                     multiline
-                                    inputProps={{ maxLength: 140 }}
+                                    inputProps={{maxLength: 140}}
                                     helperText={`${description.length} / 140`} // helperText를 사용해서 글자 수 표시
                                     FormHelperTextProps={{ // 오른쪽 정렬을 위한 스타일 추가
-                                        style: { textAlign: 'right', margin: 0 }
+                                        style: {textAlign: 'right', margin: 0}
                                     }}
                                     InputProps={{
                                         disableUnderline: true, // 밑줄 제거
