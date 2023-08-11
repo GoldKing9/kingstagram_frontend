@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import UploadModal from './UploadModal';
 import {styled, useTheme, Theme, CSSObject} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -87,6 +88,7 @@ export default function NavigationBar() {
     const isMatch = useMediaQuery(theme.breakpoints.up('md'));
     const [open, setOpen] = React.useState(isMatch); // 상태의 변화에 따라 UI를 업데이트, 렌더링 필요
     const [isModalOpen, setModalOpen] = React.useState(false); // 모달을 관리하는 상태 추가
+    const navigate = useNavigate();
 
     const handleOpenModal = () => {
         setModalOpen(true);
@@ -97,7 +99,7 @@ export default function NavigationBar() {
     };
 
     const handleHomeClick = () => {
-        console.log("Home clicked!");
+        navigate("/feed"); // `/feed` 경로로 이동
     };
 
     const handleSearchClick = () => {
