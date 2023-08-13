@@ -51,9 +51,9 @@ const debounce = <T extends (...args: any[]) => any>(fn: T, delay: number) => {
 const Signup = () => {
   
   const emailRegEx = /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-  const passwordRegEx = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,16}$/;
+  const passwordRegEx = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*[\]{}<>,.\\/_=+()]).{8,16}$/;
   const nameRegEx = /^(?!(?:[ㄱ-ㅎㅏ-ㅣ]+|[aeiouAEIOU]+)$)[가-힣]{2,5}$/;
-  const nicknameRegEx = /^(?=.*[a-z])(?=.*[!@#$%^&*_0-9])(?!.*[A-Z]).{4,16}$/;
+  const nicknameRegEx = /^(?=.*[a-z])(?=.*[_0-9]?)(?=.{4,16}$).*/;
   
   const [form, setForm] = useState<form>({
     email: "",
@@ -99,7 +99,7 @@ const Signup = () => {
 
     if (!passwordRegEx.test(currentPassword)) {
       setIsValid({...isValid, isValidPassword: false});
-      console.log("비밀번호 형식(소문자 or 대문자,숫자,!@#$%^&* 포함 8자에서 16자)에 맞게 작성해주세요");
+      console.log("비밀번호 형식(소문자 or 대문자,숫자, 특수문자 포함 8자에서 16자)에 맞게 작성해주세요");
       alert("비밀번호 형식(소문자 or 대문자,숫자,!@#$%^&* 포함 8자에서 16자)에 맞게 작성해주세요");
     } else {
       setIsValid({...isValid, isValidPassword: true});
@@ -135,7 +135,7 @@ const Signup = () => {
 
     if (!nicknameRegEx.test(currentNickname)) {
       setIsValid({...isValid, isValidNickname: false});
-      console.log("사용자 이름 형식(소문자,숫자,_(생략가능) 포함 4자~16자)에 맞게 작성해주세요")
+      console.log("사용자 이름 형식(소문자,숫자(생략가능),_(생략가능) 포함 4자~16자)에 맞게 작성해주세요")
       alert("사용자 이름 형식(소문자,숫자,_(생략가능) 포함 4자~16자)에 맞게 작성해주세요");
     } else {
       setIsValid({...isValid, isValidNickname: true});
@@ -144,23 +144,28 @@ const Signup = () => {
   }, 800)
 
   const onSubmit = async() => {
-    await axios
-      .post('http://localhost:8080/sosak.store/api/signup', {
+    return await axios
+      .post('https://sosak.store/api/signup', {
         userEmail: form.email,
         userNickname: form.nickname,
         userPw: form.password,
         userName: form.name
       })
-      .then(function (Responses) {
-        console.log(Responses);
-        alert("회원가입에 성공하셨습니다!");
-        if(Responses.status === 200) {
-          navigateLogin(); 
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then(function (Responses) {        
+          console.log('hello');  
+          console.log(Responses);
+          console.log(Responses.data);
+          console.log(Responses.data.responseCode);
+          console.log(Responses.data.reponseMessage);
+          if(Responses.data.responseCode == 1) {
+            alert("회원가입에 성공하셨습니다!");
+            navigateLogin();
+          } else if(Responses.data.responseCode == -1) {
+            console.log(Responses.data.reponseMessage);
+            alert(Responses.data.reponseMessage);
+          }
+        } 
+      );
   }
   
   const navigate = useNavigate();
