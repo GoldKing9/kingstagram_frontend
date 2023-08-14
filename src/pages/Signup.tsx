@@ -1,3 +1,6 @@
+// 한승재(풀스택 1회차) : 기여도 5%
+// 김준서(풀스택 1회차) : 기여도 5%
+
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -151,18 +154,20 @@ const Signup = () => {
         userPw: form.password,
         userName: form.name
       })
-      .then(function (Responses) {        
+      .then(function (responses) {        
           console.log('hello');  
-          console.log(Responses);
-          console.log(Responses.data);
-          console.log(Responses.data.responseCode);
-          console.log(Responses.data.reponseMessage);
-          if(Responses.data.responseCode == 1) {
+          console.log(responses);
+          console.log(responses.data);
+          console.log(responses.data.responseCode);
+          console.log(responses.data.responseMessage);
+          if(responses.data.responseCode == 1) {
             alert("회원가입에 성공하셨습니다!");
             navigateLogin();
-          } else if(Responses.data.responseCode == -1) {
-            console.log(Responses.data.reponseMessage);
-            alert(Responses.data.reponseMessage);
+          } else if(responses.data.responseCode == -1) {
+            console.log(responses.data.responseMessage);
+            setTimeout(() => {
+              alert(responses.data.responseMessage);
+            }, 2000);
           }
         } 
       );
